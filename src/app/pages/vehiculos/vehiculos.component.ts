@@ -35,7 +35,6 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocompl
       AutoCompleteModule],
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss',
-  providers: [MessageService]
 })
 export class VehiculosComponent  implements OnInit {
   formBuilder = inject(FormBuilder);

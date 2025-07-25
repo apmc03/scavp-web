@@ -32,7 +32,6 @@ import { FuncionarioService } from '../../services/funcionario.service';
      ],
   templateUrl: './funcionarios.component.html',
   styleUrl: './funcionarios.component.scss',
-  providers: [MessageService]
 })
 export class FuncionariosComponent implements OnInit {
   formBuilder = inject(FormBuilder);
