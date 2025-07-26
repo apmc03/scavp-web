@@ -21,7 +21,7 @@
                     <p-sortIcon field="placa"></p-sortIcon>
                 </th>
                 <th pSortableColumn="visitante">
-                    Visitante                
+                    Encargado                
                     <p-sortIcon field="visitante"></p-sortIcon>
                 </th>
                 <th pSortableColumn="fecha_ingreso">
@@ -31,9 +31,6 @@
                 <th pSortableColumn="fecha_salida">
                     Fecha Salida
                     <p-sortIcon field="fecha_salida"></p-sortIcon>
-                </th>
-                <th>
-                    Opciones
                 </th>
             </tr>
         </ng-template>
@@ -50,11 +47,6 @@
                 </td>
                 <td>
                     {{ acceso.fecha_salida }}
-                </td>
-                <td>
-                    <div *ngIf="acceso.estado !== 'ELIMINADO'">
-                        <p-button icon="pi pi-eye" severity="info" class="mr-2" [rounded]="true" [outlined]="true" />
-                    </div>
                 </td>
             </tr>
         </ng-template>

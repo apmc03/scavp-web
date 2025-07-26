@@ -42,14 +42,11 @@ export class AccesosComponent implements OnInit {
 
   getSeverity(status: string) {
     switch (status) {
-        case 'VISITANTE':
-            return 'info';
-
-        case 'FUNCIONARIO':
-            return 'success';
+        case 'Visitante':
+          return 'info';
 
         default:
-            return 'info';
+          return 'success';
     } 
   }
 
