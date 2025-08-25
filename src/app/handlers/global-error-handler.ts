@@ -1,12 +1,15 @@
 import { ErrorHandler, inject, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
     private toastService = inject(MessageService);
+    private spinnerService = inject(NgxSpinnerService);
 
     handleError(error: any): void {
+        this.spinnerService.hide();
         console.error('Global Error Handler:');
 
         if (error instanceof HttpErrorResponse) {
