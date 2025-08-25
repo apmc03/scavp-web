@@ -7,10 +7,14 @@ import { environment } from '../environment/environment';
 })
 export class AccesoService {
   private httpClient = inject(HttpClient);
-  private baseUrl = environment.apiUrl;
+  private baseUrl = environment.apiUrl + '/accesos';
 
   getAccesos() {
-    return this.httpClient.get<any>(this.baseUrl + '/accesos');
+    return this.httpClient.get<any>(this.baseUrl);
   }
 
+  actualizarVisitante(data: any) {
+    return this.httpClient.post<any>(this.baseUrl + '/actualizar-visitante', data);
+  }
+  
 }

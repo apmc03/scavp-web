@@ -24,6 +24,9 @@
                     Encargado                
                     <p-sortIcon field="visitante"></p-sortIcon>
                 </th>
+                <th pSortableColumn="tipo">
+                    Tipo
+                </th>
                 <th pSortableColumn="fecha_ingreso">
                     Fecha Ingreso
                     <p-sortIcon field="fecha_ingreso"></p-sortIcon>
@@ -39,8 +42,17 @@
                 <td>
                     {{ acceso.placa }}
                 </td>
+                <td>
+                    @if(acceso.visitante === '0') {
+                        <div class="flex justify-center">
+                            <p-button icon="pi pi-pencil" severity="info" rounded outlined  (onClick)="showDialog(acceso)" />
+                        </div>
+                    }  @else {
+                        {{ acceso.visitante }}
+                    }
+                </td>
                 <td class="text-center">
-                    <p-tag [value]="acceso.visitante" [severity]="getSeverity(acceso.visitante)" styleClass="dark:!bg-surface-900" />
+                    <p-tag [value]="acceso.vehiculo_id == null ? 'VISITANTE' : 'FUNCIONARIO'" [severity]="getSeverity(acceso.vehiculo_id)" styleClass="dark:!bg-surface-900" />
                 </td>
                 <td>
                     {{ acceso.fecha_ingreso }}
@@ -63,3 +75,56 @@
 
     </p-table>
 </div>
+
+<p-dialog header="Actualizar Acceso" [(visible)]="displayDialog" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '30vw' }" [modal]="true">
+    <div>
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-100 shadow-xl rounded-xl p-6 space-y-5">
+    
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-500">Placa:</span>
+            <span class="text-lg font-bold text-gray-900">
+              {{ accesoSeleccionado?.placa }}
+            </span>
+          </div>
+    
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-500">Encargado:</span>
+            <span class="text-base font-medium text-gray-800">
+              {{ accesoSeleccionado?.encargado || '—' }}
+            </span>
+          </div>
+    
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-500">Tipo:</span>
+            <p-tag [value]="accesoSeleccionado?.vehiculo_id == null ? 'VISITANTE' : 'FUNCIONARIO'" [severity]="getSeverity(accesoSeleccionado?.vehiculo_id)" styleClass="dark:!bg-surface-900" />
+          </div>
+    
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-500">Fecha Ingreso:</span>
+            <span class="text-base text-end font-medium text-gray-800">
+              {{ accesoSeleccionado?.fecha_ingreso }}
+            </span>
+          </div>
+    
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-500">Fecha Salida:</span>
+            <span class="text-base text-end font-medium text-gray-800">
+              {{ accesoSeleccionado?.fecha_salida }}
+            </span>
+          </div>    
+        </div>
+        <div class="mt-4">
+            <form [formGroup]="visitanteForm">
+                <p-iconfield>
+                    <p-inputicon class="pi pi-user" />
+                    <input pInputText type="text" class="w-full" placeholder="Nombre de la persona" formControlName="persona" />
+                </p-iconfield>
+            </form>
+        </div>
+      </div>
+    
+    <ng-template #footer>
+        <p-button label="Cancelar" (click)="closeDialog()" severity="secondary" outlined />
+        <p-button label="Actualizar" (click)="actualizarAcceso()" severity="info" />
+    </ng-template>
+</p-dialog>

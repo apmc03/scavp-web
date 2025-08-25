@@ -6,11 +6,13 @@ import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { LayoutService } from '../service/layout.service';
+import { ToastModule } from 'primeng/toast';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
+    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, ToastModule, NgxSpinnerModule],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
         <app-topbar></app-topbar>
         <app-sidebar></app-sidebar>
@@ -21,7 +23,13 @@ import { LayoutService } from '../service/layout.service';
             <app-footer></app-footer>
         </div>
         <div class="layout-mask animate-fadein"></div>
-    </div> `
+
+    </div> 
+    <p-toast />
+    <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#34d399" type="ball-fussion" [fullScreen]="true" >
+        <p style="color: #34d399"> Cargando... </p>
+    </ngx-spinner>    
+    `
 })
 export class AppLayout {
     overlayMenuOpenSubscription: Subscription;

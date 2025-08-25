@@ -11,20 +11,24 @@ import { LoginService } from '../../services/login.service';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { TokenService } from '../../services/utils/token.service';
+import { ToastModule } from 'primeng/toast';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-login',
     standalone: true,
     imports: [
-        ButtonModule, 
-        CheckboxModule, 
-        InputTextModule, 
-        PasswordModule, 
-        FormsModule, 
+        ButtonModule,
+        CheckboxModule,
+        InputTextModule,
+        PasswordModule,
+        FormsModule,
         ReactiveFormsModule,
-        RouterModule, 
-        RippleModule, 
-        AppFloatingConfigurator
+        RouterModule,
+        RippleModule,
+        AppFloatingConfigurator,
+        ToastModule,
+        NgxSpinnerModule
     ],
     template: `
         <app-floating-configurator />
@@ -56,23 +60,28 @@ import { TokenService } from '../../services/utils/token.service';
                 </div>
             </div>
         </div>
+        <p-toast />
+        <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#34d399" type="ball-fussion" [fullScreen]="true" >
+            <p style="color: #34d399"> Cargando... </p>
+        </ngx-spinner>
     `
 })
 export class Login implements OnInit, OnDestroy {
     authForm: FormGroup;
     private fb = inject(FormBuilder);
-    private router = inject(Router); 
+    private router = inject(Router);
     private loginService = inject(LoginService);
     private toastService = inject(MessageService);
+    private spinner = inject(NgxSpinnerService);
     private destroy$ = new Subject<void>();
-  
+
     constructor() {
-      this.authForm = this.fb.group({
-        correo: ['', [Validators.required]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-      });
+        this.authForm = this.fb.group({
+            correo: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
+        });
     }
-  
+
     ngOnInit(): void {
         TokenService.isAuthenticated() ? this.router.navigate(['/']) : null;
     }
@@ -84,24 +93,33 @@ export class Login implements OnInit, OnDestroy {
 
     onSubmit() {
         this.authForm.markAllAsTouched();
-    
-        if(this.authForm.valid) {
-          this.loginService.login(this.authForm.value).pipe(takeUntil(this.destroy$)).subscribe((res) => {
-            if (res.token) {
-              TokenService.setUser(res.result);
-              TokenService.setToken(res.token);
-    
-              this.router.navigate(['/']);
-            }
-          });
-        } else {          
-          this.toastService.add({
-            severity: 'error',
-            summary: 'Mensaje de error',
-            detail: 'Formulario no válido.'
-          });
+
+        if (this.authForm.valid) {
+            this.spinner.show();
+            this.loginService.login(this.authForm.value).pipe(takeUntil(this.destroy$)).subscribe((res) => {
+                if (res.token) {
+                    TokenService.setUser(res.result);
+                    TokenService.setToken(res.token);
+
+                    this.router.navigate(['/']);
+                } else if (res.code === '404') {
+                    this.toastService.add({
+                        severity: 'error',
+                        summary: 'Error al iniciar sesión',
+                        detail: 'Correo o contraseña incorrectos.'
+                    });
+                }
+                this.spinner.hide();
+            });
+        } else {
+            this.spinner.hide();
+            this.toastService.add({
+                severity: 'error',
+                summary: 'Mensaje de error',
+                detail: 'Formulario no válido.'
+            });
         }
-    
+
     }
 
 }
